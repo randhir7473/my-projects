@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>File Tracking & Correction Management System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#063d6b;--navy2:#07528d;--blue:#0875d1;--light:#f3f8fc;
+  --border:#d8e6f0;--text:#163b5b;--muted:#607d94;--green:#149447;
+}
+body{font-family:Roboto,"Noto Sans Devanagari",Arial,sans-serif;background:#eef5f9;color:var(--text);font-size:13px}
+button,input{font:inherit}
+.header{height:80px;background:linear-gradient(90deg,#073b67,#064d80,#0b5b8c);color:#fff;display:flex;align-items:center;padding:0 18px;gap:18px;box-shadow:0 2px 8px #0003}
+.gov{width:52px;text-align:center;border-right:1px solid #ffffff55;padding-right:12px}
+.gov i{font-size:40px}.gov small{font-size:7px;display:block}
+.brand{flex:1}.brand h1{font-size:24px;letter-spacing:.2px}.brand p{font-size:13px;margin-top:4px}
+.header-note{font-size:12px;text-align:center;line-height:1.35}.header-note b{display:block;font-size:13px}
+.user{display:flex;align-items:center;gap:9px;border-left:1px solid #ffffff40;padding-left:16px}
+.user-icon{width:40px;height:40px;border-radius:50%;background:#fff;color:#17567f;display:grid;place-items:center;font-size:22px}
+.user small{display:block;color:#d9eafa}.user strong{font-size:13px}
+.layout{display:flex;min-height:calc(100vh - 80px)}
+.sidebar{width:190px;background:linear-gradient(#063f6d,#052f52);color:#fff;flex-shrink:0}
+.menu{list-style:none;padding-top:8px}.menu li{padding:12px 15px;border-bottom:1px solid #ffffff10;display:flex;align-items:center;gap:12px;cursor:pointer}
+.menu li:hover,.menu li.active{background:#0879d4}.menu i{width:20px;text-align:center;font-size:17px}.menu .arrow{margin-left:auto;font-size:10px}
+.main{flex:1;padding:14px 10px;min-width:0}
+.top-grid{display:grid;grid-template-columns:minmax(0,3.1fr) minmax(285px,1.2fr);gap:12px}
+.card{background:#fff;border:1px solid var(--border);border-radius:7px;box-shadow:0 1px 4px #234b6312}
+.section-title{padding:10px 14px;font-size:13px;font-weight:700;border-bottom:1px solid var(--border)}
+.movement{padding:8px 14px 12px}
+.route-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.route{border-radius:6px;padding:12px 8px 10px;text-align:center;border:1px solid #d4e6f3}
+.route:nth-child(1){background:#e1f2ff}.route:nth-child(2){background:#e3f8ec}.route:nth-child(3){background:#fff0df}.route:nth-child(4){background:#eee6ff}
+.route .ico{font-size:25px;margin-bottom:7px}.route:nth-child(1) .ico,.route:nth-child(1) button{color:#066cc1}.route:nth-child(2) .ico,.route:nth-child(2) button{color:#11934b}.route:nth-child(3) .ico,.route:nth-child(3) button{color:#db6800}.route:nth-child(4) .ico,.route:nth-child(4) button{color:#6c28bd}
+.route b{display:block;font-size:12px;line-height:1.45}.route span{display:block;font-size:11px;font-weight:600;margin-bottom:8px}
+.route button{border:0;border-radius:4px;background:currentColor;color:#fff!important;padding:7px 24px;cursor:pointer;font-weight:600}
+.route button:hover{filter:brightness(.9)}
+.search{display:flex;gap:9px;margin-top:9px}.search-wrap{flex:1;position:relative}.search-wrap i{position:absolute;left:10px;top:10px;color:#39779f}.search input{width:100%;padding:8px 10px 8px 30px;border:1px solid var(--border);border-radius:4px;outline:0}.search button{border:1px solid var(--border);background:#0875d1;color:#fff;border-radius:4px;padding:0 22px;font-weight:600}.search .reset{background:#fff;color:#236080}
+.status{padding:8px}.status-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{border:1px solid var(--border);border-radius:6px;padding:9px;min-height:65px;display:flex;gap:9px;align-items:center}.stat i{font-size:23px}.stat b{font-size:16px;display:block;margin-top:2px}.stat small{font-size:10px}.blue{background:#e8f7ff;color:#0969b6}.orange{background:#fff6df;color:#bd7900}.green{background:#e5faee;color:#148046}.red{background:#fff0f0;color:#c83232}.purple{background:#f1edff;color:#6638b8}.cyan{background:#e7f9ff;color:#067da7}.pink{background:#fff0f7;color:#bd2870}.status-grid .wide{grid-column:span 2}
+.content-grid{display:grid;grid-template-columns:minmax(0,3.1fr) minmax(285px,1.2fr);gap:12px;margin-top:12px}
+.table-card{overflow:hidden}.table-scroll{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:850px}.table th{background:#e6f3fb;color:#174e73;font-size:10px;text-align:left;padding:9px 7px;border:1px solid #d4e6f0}.table td{padding:8px 7px;border:1px solid #e2edf3;font-size:10px;white-space:nowrap}.table tr:hover{background:#f5fbff}
+.badge{padding:5px 8px;border-radius:5px;font-size:10px;font-weight:600;display:inline-block}.b-blue{background:#ccecff;color:#0870bb}.b-green{background:#c9f4d9;color:#168044}.b-purple{background:#e3d8ff;color:#6a2ab7}.b-red{background:#ffd8d8;color:#be2d2d}.b-orange{background:#fff0c8;color:#b36b00}
+.actions i{color:#0874ca;margin-right:9px;cursor:pointer}.pagination{padding:9px;text-align:right}.pagination button{border:1px solid var(--border);background:#fff;padding:5px 9px;margin-left:3px;border-radius:3px}.pagination .current{background:#0875d1;color:#fff}
+.flow{padding:10px 12px}.step{position:relative;padding-left:45px;padding-bottom:15px}.step:before{content:"";position:absolute;left:18px;top:33px;bottom:0;width:2px;background:#4a9bd1}.step:last-child:before{display:none}.step-icon{position:absolute;left:0;top:0;width:37px;height:37px;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:17px}.s-green{background:#15934c}.s-blue{background:#0875d1}.s-purple{background:#7040c0}.step h4{color:#fff;padding:5px 9px;border-radius:4px;font-size:11px;margin-bottom:5px}.hgreen{background:#15934c}.hblue{background:#0875d1}.hpurple{background:#7040c0}.step ul{padding-left:18px;color:#486b81;font-size:10px;line-height:1.55}
+.bottom-grid{display:grid;grid-template-columns:1.1fr .85fr 1fr 1.15fr;gap:12px;margin-top:12px}.bottom-card{padding:10px;min-height:125px}.bottom-title{font-weight:700;font-size:12px;border-bottom:1px solid var(--border);padding-bottom:7px;margin-bottom:7px}.activity li{list-style:none;font-size:9px;padding:4px 0;border-bottom:1px dotted #d5e2ea}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:#0a79d2;margin-right:5px}.donut{width:88px;height:88px;border-radius:50%;margin:8px auto;display:grid;place-items:center;background:conic-gradient(#0875d1 0 31%,#15934c 31% 52%,#7141bf 52% 69%,#df3156 69% 82%,#f29c16 82% 100%);position:relative}.donut:after{content:"58\A Total Pending";white-space:pre;text-align:center;position:absolute;width:55px;height:55px;border-radius:50%;background:#fff;display:grid;place-items:center;font-weight:700;font-size:9px}
+.links button{width:100%;border:0;color:#fff;text-align:left;padding:7px 9px;margin-bottom:5px;border-radius:3px;cursor:pointer}.links button:nth-child(1){background:#086bc0}.links button:nth-child(2){background:#15934c}.links button:nth-child(3){background:#7040c0}.links button:nth-child(4){background:#e98a09}.notes li{font-size:10px;line-height:1.55;margin-left:15px}
+.footer{background:#073b67;color:#fff;text-align:center;padding:7px;font-size:9px;margin-top:12px;display:flex;justify-content:space-between}
+@media(max-width:1100px){.sidebar{width:62px}.menu span{display:none}.menu li{justify-content:center;padding:14px 5px}.menu .arrow{display:none}.bottom-grid{grid-template-columns:repeat(2,1fr)}.top-grid,.content-grid{grid-template-columns:1fr}.status-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.header{height:auto;min-height:70px;padding:8px}.brand h1{font-size:17px}.brand p,.header-note{display:none}.user{padding-left:7px}.user div:not(.user-icon){display:none}.route-cards{grid-template-columns:repeat(2,1fr)}.status-grid{grid-template-columns:repeat(2,1fr)}.status-grid .wide{grid-column:span 1}.bottom-grid{grid-template-columns:1fr}.main{padding:7px}.footer{display:block}.footer span{display:block;margin:2px}}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="gov"><i class="fa-solid fa-landmark"></i><small>भारत सरकार</small></div>
+  <div class="brand">
+    <h1>File Tracking &amp; Correction Management System</h1>
+    <p>उच्च माध्यमिक शिक्षा विभाग &nbsp; | &nbsp; File Movement &nbsp; | &nbsp; Document Tracking &nbsp; | &nbsp; Complete PDF</p>
+  </div>
+  <div class="header-note"><b>सभी जानकारी<br>सही प्रक्रिया<br>सही परिणाम</b></div>
+  <div class="user">
+    <div class="user-icon"><i class="fa-solid fa-user"></i></div>
+    <div><small>Welcome,</small><strong>Nitish Kumar (SSS)⌄</strong></div>
+    <i class="fa-solid fa-right-from-bracket"></i><span>Logout</span>
+  </div>
+</header>
+
+<div class="layout">
+<aside class="sidebar">
+<ul class="menu">
+<li class="active"><i class="fa-solid fa-house"></i><span>Home</span></li>
+<li><i class="fa-solid fa-circle-plus"></i><span>Create New File</span></li>
+<li><i class="fa-solid fa-folder-open"></i><span>My Files (SSS)</span></li>
+<li><i class="fa-solid fa-user-group"></i><span>Send To Departments</span><i class="fa-solid fa-chevron-down arrow"></i></li>
+<li><i class="fa-solid fa-inbox"></i><span>Received Files</span><i class="fa-solid fa-chevron-down arrow"></i></li>
+<li><i class="fa-solid fa-clock-rotate-left"></i><span>File Movement History</span><i class="fa-solid fa-chevron-down arrow"></i></li>
+<li><i class="fa-solid fa-chart-column"></i><span>Reports</span><i class="fa-solid fa-chevron-down arrow"></i></li>
+<li><i class="fa-solid fa-gear"></i><span>Settings</span><i class="fa-solid fa-chevron-down arrow"></i></li>
+</ul>
+</aside>
+
+<main class="main">
+<div class="top-grid">
+<section class="card">
+<div class="section-title">File Movement <span style="font-weight:400">(SSS Department से भेजने के लिए)</span></div>
+<div class="movement">
+<div class="route-cards">
+<div class="route"><div class="ico"><i class="fa-solid fa-file-arrow-right"></i></div><b>1. Send to Exam Dept.</b><span>(TR के लिए)</span><button onclick="sendFile('Exam Department (TR)')">→ &nbsp; Send File</button></div>
+<div class="route"><div class="ico"><i class="fa-solid fa-graduation-cap"></i></div><b>2. Send to IT Cell</b><span>(नामांकन पत्र के लिए)</span><button onclick="sendFile('IT Cell')">→ &nbsp; Send File</button></div>
+<div class="route"><div class="ico"><i class="fa-solid fa-user-check"></i></div><b>3. Send to Secretary Cell</b><span>(Approval / Reject के लिए)</span><button onclick="sendFile('Secretary Cell')">→ &nbsp; Send File</button></div>
+<div class="route"><div class="ico"><i class="fa-solid fa-file-lines"></i></div><b>4. Send to Exam Dept.</b><span>(Final Correction के लिए)</span><button onclick="sendFile('Exam Dept. Final')">→ &nbsp; Send File</button></div>
+</div>
+<div class="search"><div class="search-wrap"><i class="fa-solid fa-magnifying-glass"></i><input id="search" onkeyup="filterTable()" placeholder="Search by File No. / Student Name / Roll No. / Enrollment No. / Father Name / Study Centre / Status"></div><button onclick="filterTable()">Search</button><button class="reset" onclick="resetSearch()">Reset</button></div>
+</div>
+</section>
+
+<section class="card status">
+<div class="section-title">File Status Summary</div>
+<div class="status-grid">
+<div class="stat blue"><i class="fa-solid fa-folder"></i><div><small>Total Files</small><b>258</b></div></div>
+<div class="stat orange"><i class="fa-solid fa-clock"></i><div><small>In Process</small><b>42</b></div></div>
+<div class="stat green"><i class="fa-solid fa-circle-check"></i><div><small>Completed</small><b>176</b></div></div>
+<div class="stat red"><i class="fa-solid fa-circle-xmark"></i><div><small>Rejected</small><b>31</b></div></div>
+<div class="stat purple"><i class="fa-solid fa-user-clock"></i><div><small>Pending at Exam Dept.</small><b>18</b></div></div>
+<div class="stat cyan"><i class="fa-solid fa-rotate"></i><div><small>Pending at IT Cell</small><b>12</b></div></div>
+<div class="stat pink wide"><i class="fa-solid fa-xmark"></i><div><small>Pending at Secretary Cell</small><b>10</b></div></div>
+<div class="stat cyan"><i class="fa-solid fa-file-circle-check"></i><div><small>Pending at Final Correction</small><b>09</b></div></div>
+</div>
+</section>
+</div>
+
+<div class="content-grid">
+<section class="card table-card">
+<div class="section-title"><i class="fa-solid fa-file-lines"></i> &nbsp; File List <span style="font-weight:400">(Latest Records)</span></div>
+<div class="table-scroll">
+<table class="table" id="fileTable">
+<thead><tr><th>S.No.</th><th>File No.</th><th>Student Name</th><th>Roll No.</th><th>Enrollment No.</th><th>Father Name</th><th>Correction Matter</th><th>Study Centre</th><th>Current Stage</th><th>Last Movement</th><th>Action</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>2026/1258</td><td>Rajesh Kumar</td><td>123456</td><td>ABC123456</td><td>Suresh Kumar</td><td>Father Name</td><td>SC-101</td><td><span class="badge b-blue">Exam Dept. (TR)</span></td><td>12-09-2026<br>10:30 AM</td><td class="actions"><i class="fa-solid fa-eye"></i><i class="fa-solid fa-file-arrow-down"></i>›</td></tr>
+<tr><td>2</td><td>2026/1257</td><td>Pooja Singh</td><td>654321</td><td>DEF654321</td><td>Mahesh Singh</td><td>Student Name</td><td>SC-102</td><td><span class="badge b-green">IT Cell</span></td><td>11-09-2026<br>04:15 PM</td><td class="actions"><i class="fa-solid fa-eye"></i><i class="fa-solid fa-file-arrow-down"></i>›</td></tr>
+<tr><td>3</td><td>2026/1256</td><td>Amit Yadav</td><td>789456</td><td>GHI789456</td><td>Ramesh Yadav</td><td>DOB</td><td>SC-103</td><td><span class="badge b-purple">Secretary Cell</span></td><td>10-09-2026<br>01:20 PM</td><td class="actions"><i class="fa-solid fa-eye"></i><i class="fa-solid fa-file-arrow-down"></i>›</td></tr>
+<tr><td>4</td><td>2026/1255</td><td>Neha Kumari</td><td>321654</td><td>JKL321654</td><td>Dinesh Kumar</td><td>Photo</td><td>SC-104</td><td><span class="badge b-red">SSS (Returned)</span></td><td>09-09-2026<br>11:05 AM</td><td class="actions"><i class="fa-solid fa-eye"></i><i class="fa-solid fa-file-arrow-down"></i>›</td></tr>
+<tr><td>5</td><td>2026/1254</td><td>Rohit Verma</td><td>987123</td><td>MNO987123</td><td>Sunil Verma</td><td>Signature</td><td>SC-105</td><td><span class="badge b-blue">Exam Dept. (Final)</span></td><td>08-09-2026<br>03:45 PM</td><td class="actions"><i class="fa-solid fa-eye"></i><i class="fa-solid fa-file-arrow-down"></i>›</td></tr>
+<tr><td>6</td><td>2026/1253</td><td>Anjali Sharma</td><td>456789</td><td>PQR456789</td><td>Rajesh Sharma</td><td>Father Name</td><td>SC-106</td><td><span class="badge b-green">Completed</span></td><td>07-09-2026<br>05:30 PM</td><td class="actions"><i class="fa-solid fa-eye"></i><i class="fa-solid fa-file-arrow-down"></i>›</td></tr>
+<tr><td>7</td><td>2026/1252</td><td>Vikas Singh</td><td>789012</td><td>STU789012</td><td>Brijesh Singh</td><td>Enrollment No.</td><td>SC-107</td><td><span class="badge b-orange">IT Cell (Returned)</span></td><td>06-09-2026<br>02:10 PM</td><td class="actions"><i class="fa-solid fa-eye"></i><i class="fa-solid fa-file-arrow-down"></i>›</td></tr>
+<tr><td>8</td><td>2026/1251</td><td>Sneha Gupta</td><td>345678</td><td>VWX345678</td><td>Deepak Gupta</td><td>Address</td><td>SC-108</td><td><span class="badge b-purple">Secretary Cell</span></td><td>05-09-2026<br>12:40 PM</td><td class="actions"><i class="fa-solid fa-eye"></i><i class="fa-solid fa-file-arrow-down"></i>›</td></tr>
+<tr><td>9</td><td>2026/1250</td><td>Karan Patel</td><td>556677</td><td>YZA556677</td><td>Manoj Patel</td><td>Name Correction</td><td>SC-109</td><td><span class="badge b-orange">Pending</span></td><td>04-09-2026<br>11:15 AM</td><td class="actions"><i class="fa-solid fa-eye"></i><i class="fa-solid fa-file-arrow-down"></i>›</td></tr>
+<tr><td>10</td><td>2026/1249</td><td>Priya Verma</td><td>667788</td><td>BCD667788</td><td>Sanjay Verma</td><td>DOB</td><td>SC-110</td><td><span class="badge b-blue">SSS (Sent)</span></td><td>03-09-2026<br>09:20 AM</td><td class="actions"><i class="fa-solid fa-eye"></i><i class="fa-solid fa-file-arrow-down"></i>›</td></tr>
+</tbody>
+</table>
+</div>
+<div class="pagination">Showing 1 to 10 of 258 entries &nbsp;&nbsp; <button>«</button><button class="current">1</button><button>2</button><button>3</button><button>4</button><button>5</button><button>...</button><button>26</button><button>»</button></div>
+</section>
+
+<section class="card">
+<div class="section-title">File Movement Process <small>(Step by Step)</small></div>
+<div class="flow">
+<div class="step"><div class="step-icon s-green"><i class="fa-solid fa-user-check"></i></div><h4 class="hgreen">SSS Department (Authorised)</h4><ul><li>File Create / View</li><li>Send to 4 Departments</li><li>Receive from Departments</li><li>Final Status / Complete</li></ul></div>
+<div class="step"><div class="step-icon s-blue"><i class="fa-solid fa-building-columns"></i></div><h4 class="hblue">1. Exam Department (TR के लिए)</h4><ul><li>Receive from SSS</li><li>Accept / Reject</li><li>Work (TR Apply)</li><li>Return to SSS</li></ul></div>
+<div class="step"><div class="step-icon s-green"><i class="fa-solid fa-graduation-cap"></i></div><h4 class="hgreen">2. IT Cell (नामांकन पत्र के लिए)</h4><ul><li>Receive from SSS</li><li>Accept / Reject</li><li>Work (Enrollment)</li><li>Return to SSS</li></ul></div>
+<div class="step"><div class="step-icon s-purple"><i class="fa-solid fa-user"></i></div><h4 class="hpurple">3. Secretary Cell (Approval / Reject)</h4><ul><li>Receive from SSS</li><li>Accept / Reject</li><li>Approve / Reject</li><li>Return to SSS</li></ul></div>
+<div class="step"><div class="step-icon s-blue"><i class="fa-solid fa-file-lines"></i></div><h4 class="hblue">4. Exam Department (Final Correction)</h4><ul><li>Receive from SSS (After Secretary Approval)</li><li>Accept / Reject</li><li>Final Correction</li><li>Complete (Success)</li></ul></div>
+</div>
+</section>
+</div>
+
+<div class="bottom-grid">
+<section class="card bottom-card"><div class="bottom-title"><i class="fa-solid fa-clock"></i> Recent Activity <small>(Latest 5)</small></div><ul class="activity">
+<li><span class="dot"></span>File 2026/1258 sent to Exam Dept. (TR) by SSS</li>
+<li><span class="dot" style="background:#f18a17"></span>File 2026/1257 received from SSS at IT Cell</li>
+<li><span class="dot" style="background:#6d3db5"></span>File 2026/1256 sent to Secretary Cell by SSS</li>
+<li><span class="dot" style="background:#15934c"></span>File 2026/1255 returned to SSS from Exam Dept.</li>
+<li><span class="dot" style="background:#15934c"></span>File 2026/1254 completed successfully</li>
+</ul></section>
+
+<section class="card bottom-card"><div class="bottom-title"><i class="fa-solid fa-user-clock"></i> Department Wise Pending <small>(Current)</small></div><div class="donut"></div><div style="font-size:9px;line-height:1.5;text-align:center">🔵 Exam Department 18 &nbsp; 🟢 IT Cell 12<br>🟣 Secretary Cell 10 &nbsp; 🔴 SSS Return 8<br>🔵 Final Correction 10</div></section>
+
+<section class="card bottom-card"><div class="bottom-title"><i class="fa-solid fa-circle-plus"></i> Quick Links</div><div class="links"><button onclick="alert('File Movement History')"><i class="fa-solid fa-clock-rotate-left"></i> &nbsp; View File Movement History</button><button onclick="alert('Scanned Documents')"><i class="fa-solid fa-file-image"></i> &nbsp; View Scanned Documents</button><button onclick="alert('Complete PDF')"><i class="fa-solid fa-file-pdf"></i> &nbsp; View Complete PDF (All Docs)</button><button onclick="alert('Excel Report')"><i class="fa-solid fa-file-excel"></i> &nbsp; Download Excel Report</button></div></section>
+
+<section class="card bottom-card"><div class="bottom-title"><i class="fa-solid fa-circle-info"></i> Important Notes</div><ul class="notes">
+<li>SSS विभाग ही सभी फाइलों का Authorised Department है।</li>
+<li>किसी भी विभाग द्वारा भेजी गई फाइल SSS में वापस आने के बाद ही आगे भेजी जाती है।</li>
+<li>फाइल की Acceptance / Reject / Return status का अधिकार है।</li>
+<li>Reject होने पर फाइल वापस SSS के पास आएगी।</li>
+<li>सभी गतिविधियों का रिकॉर्ड और स्कैन PDF में सुरक्षित रहेगा।</li>
+</ul></section>
+</div>
+
+<footer class="footer"><span>© 2026 File Tracking &amp; Correction Management System &nbsp; | &nbsp; All Rights Reserved</span><span>Designed for Efficient File Management</span></footer>
+</main>
+</div>
+
+<script>
+function sendFile(dept){alert('File भेजने के लिए Department चुना गया: '+dept)}
+function filterTable(){
+ const q=document.getElementById('search').value.toLowerCase().trim();
+ document.querySelectorAll('#fileTable tbody tr').forEach(row=>{
+   row.style.display=row.innerText.toLowerCase().includes(q)?'':'none';
+ });
+}
+function resetSearch(){document.getElementById('search').value='';filterTable()}
+</script>
+</body>
+</html>
